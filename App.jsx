@@ -1,491 +1,222 @@
-```react
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Search, Filter, Plus, BookOpen, Layers, User, Award, 
-  ChevronRight, X, Sparkles, Check, Edit3, Trash2, ArrowUpDown,
-  TrendingUp, DollarSign, Calendar, Globe, Tag, Info, Shield, HardDrive,
-  Download, Upload, Heart, Share2, RefreshCw, Camera, Scan, Sparkle, Eye,
-  CheckCircle2, AlertCircle, Zap
+  Search, SlidersHorizontal, Plus, Camera, Layers, Award, 
+  Coins, Filter, ArrowUpDown, ShieldCheck, Check, Sparkles, 
+  Trash2, Edit3, Eye, ArrowLeft, RefreshCw, Upload, Smartphone, 
+  TrendingUp, Globe, Database, CheckCircle2, X, ChevronRight, Info
 } from 'lucide-react';
 
-// Mock Initial Coin Database inspired by Numista
 const INITIAL_COINS = [
   {
-    id: 'num-[106]',
-    title: '2 Euros - Beatrix',
-    issuer: 'Netherlands',
-    countryCode: 'NL',
-    years: '1999-2013',
-    startYear: 1999,
-    endYear: 2013,
-    denomination: '2 Euros',
-    currency: 'Euro (1999-date)',
-    composition: 'Bimetallic: Nickel-brass clad nickel center in Copper-nickel ring',
-    weight: 8.5,
-    diameter: 25.75,
-    thickness: 2.2,
-    edge: 'Lettered ("GOD * ZIJ * MET * ONS *")',
-    alignment: 'Medal alignment ↑↑',
-    shape: 'Round',
-    rarity: 8,
-    obverseImg: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=400',
-    reverseImg: 'https://images.unsplash.com/photo-1561414927-6d86591d0c4f?auto=format&fit=crop&q=80&w=400',
-    description: 'First generation 2 Euro coin depicting Queen Beatrix of the Netherlands looking left.',
-    mints: ['Utrecht']
+    id: 1,
+    title: "1 Dollar 'Morgan Dollar'",
+    issuer: "United States",
+    flag: "🇺🇸",
+    years: "1878-1921",
+    composition: "Silver (.900)",
+    weight: "26.73 g",
+    diameter: "38.1 mm",
+    thickness: "2.4 mm",
+    rarity: 18,
+    mintage: "136,920,000",
+    obverseImg: "https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=400",
+    reverseImg: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=400",
+    description: "Designed by George T. Morgan. Features Liberty profile on obverse and eagle holding arrows and olive branch on reverse."
   },
   {
-    id: 'num-107',
-    title: '50 Pence - Atlantic Salmon',
-    issuer: 'United Kingdom',
-    countryCode: 'GB',
-    years: '2023-date',
-    startYear: 2023,
-    endYear: 2026,
-    denomination: '50 Pence',
-    currency: 'Pound sterling (1971-date)',
-    composition: 'Cupro-nickel',
-    weight: 8.0,
-    diameter: 27.3,
-    thickness: 1.78,
-    edge: 'Plain',
-    alignment: 'Medal alignment ↑↑',
-    shape: 'Seven-sided (Heptagonal)',
-    rarity: 15,
-    obverseImg: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&q=80&w=400',
-    reverseImg: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&q=80&w=400',
-    description: 'New King Charles III definitive coinage series featuring the Atlantic salmon on the reverse to highlight UK wildlife conservation.',
-    mints: ['Royal Mint (Llantrisant)']
+    id: 2,
+    title: "5 Francs 'Hercules'",
+    issuer: "France",
+    flag: "🇫🇷",
+    years: "1964-1980",
+    composition: "Silver (.900)",
+    weight: "25.0 g",
+    diameter: "37.0 mm",
+    thickness: "2.3 mm",
+    rarity: 24,
+    mintage: "4,990,000",
+    obverseImg: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&q=80&w=400",
+    reverseImg: "https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&q=80&w=400",
+    description: "Designed by Augustin Dupré. Features Hercules unifying Liberty and Equality."
+  },
+  {
+    id: 3,
+    title: "1 Pound - Charles III (Bee)",
+    issuer: "United Kingdom",
+    flag: "🇬🇧",
+    years: "2023-present",
+    composition: "Bimetallic (Nickel-brass ring, Cupronickel center)",
+    weight: "8.75 g",
+    diameter: "23.4 mm",
+    thickness: "2.8 mm",
+    rarity: 42,
+    mintage: "2,960,000",
+    obverseImg: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=400",
+    reverseImg: "https://images.unsplash.com/photo-1561414927-6d86591d0c4f?auto=format&fit=crop&q=80&w=400",
+    description: "Features King Charles III uncrowned portrait on obverse and Bumblebee design celebrating British wildlife on reverse."
+  },
+  {
+    id: 4,
+    title: "50 Pence 'Atlantic Salmon'",
+    issuer: "United Kingdom",
+    flag: "🇬🇧",
+    years: "2023-present",
+    composition: "Cupronickel",
+    weight: "8.00 g",
+    diameter: "27.3 mm",
+    thickness: "1.78 mm",
+    rarity: 65,
+    mintage: "500,000",
+    obverseImg: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=400",
+    reverseImg: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=400",
+    description: "Part of the new UK wildlife defintive series featuring the Atlantic Salmon."
   }
-];
-
-// Sample Presets for Instant Camera Scan Simulation
-const SCAN_PRESETS = [
-  {
-    name: '1921 Morgan Silver Dollar (USA)',
-    coinId: 'num-101',
-    confidence: 97,
-    image: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=400',
-    detectedYear: 1921,
-    detectedMint: 'Philadelphia (no mark)'
-  },
-  {
-    name: '50p Atlantic Salmon (UK 2023)',
-    coinId: 'num-107',
-    confidence: 94,
-    image: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&q=80&w=400',
-    detectedYear: 2023,
-    detectedMint: 'Llantrisant'
-  },
-  {
-    name: '5 Francs Hercules 1875 (France)',
-    coinId: 'num-102',
-    confidence: 91,
-    image: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&q=80&w=400',
-    detectedYear: 1875,
-    detectedMint: 'Paris (A)'
-  },
-  {
-    name: 'Gold Sovereign Victoria (UK 1889)',
-    coinId: 'num-103',
-    confidence: 98,
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=400',
-    detectedYear: 1889,
-    detectedMint: 'London'
-  }
-];
-
-// Standard Numismatic Grading Scale
-const GRADES = [
-  { code: 'G-4', label: 'Good', desc: 'Heavily worn' },
-  { code: 'VG-8', label: 'Very Good', desc: 'Well worn design' },
-  { code: 'F-12', label: 'Fine', desc: 'Moderate wear on high points' },
-  { code: 'VF-20', label: 'Very Fine', desc: 'Light wear, major features crisp' },
-  { code: 'XF-40', label: 'Extremely Fine', desc: 'Slight wear on highest points' },
-  { code: 'AU-50', label: 'About Uncirculated', desc: 'Trace wear, partial mint luster' },
-  { code: 'UNC', label: 'Uncirculated (MS-60)', desc: 'No wear, original luster' },
-  { code: 'BU', label: 'Brilliant Uncirculated', desc: 'Full luster, prime strike' },
-  { code: 'PROOF', label: 'Proof', desc: 'Specially struck mirror finish' }
 ];
 
 export default function App() {
-  // Navigation State
-  const [activeTab, setActiveTab] = useState('catalog'); // 'catalog' | 'scan' | 'collection' | 'stats'
-  
-  // Coin Database & Collection State
+  const [activeTab, setActiveTab] = useState('catalog');
   const [coins] = useState(INITIAL_COINS);
-  const [userCollection, setUserCollection] = useState(() => {
-    const saved = localStorage.getItem('numista_user_collection');
-    return saved ? JSON.parse(saved) : [
-      {
-        id: 'col-1',
-        coinId: 'num-101',
-        year: 1881,
-        mintMark: 'S',
-        grade: 'UNC',
-        quantity: 1,
-        purchasePrice: 65,
-        estimatedValue: 85,
-        notes: 'Beautiful frost on Liberty profile. Acquired at coin show.',
-        dateAdded: '2025-01-15'
-      },
-      {
-        id: 'col-2',
-        coinId: 'num-103',
-        year: 1889,
-        mintMark: 'London',
-        grade: 'VF-20',
-        quantity: 1,
-        purchasePrice: 480,
-        estimatedValue: 540,
-        notes: 'Slight mark near crown. Good luster remains.',
-        dateAdded: '2025-02-01'
-      }
-    ];
-  });
-
-  // Scanner State
-  const [scanSide, setScanSide] = useState('obverse'); // 'obverse' | 'reverse'
-  const [scannedObverseImg, setScannedObverseImg] = useState(null);
-  const [scannedReverseImg, setScannedReverseImg] = useState(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanProgress, setScanProgress] = useState(0);
+  const [collection, setCollection] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
+  
+  // Scanner state
+  const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
-  const [cameraActive, setCameraActive] = useState(false);
-  const videoRef = useRef(null);
-
-  // Notification Toast State
-  const [toastMessage, setToastMessage] = useState(null);
+  const [scanProgress, setScanProgress] = useState(0);
 
   const showToast = (msg) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3500);
+    setTimeout(() => setToastMessage(''), 3000);
   };
 
-  // Filter & Search State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIssuer, setSelectedIssuer] = useState('ALL');
-  const [selectedComposition, setSelectedComposition] = useState('ALL');
-  const [minYearFilter, setMinYearFilter] = useState('');
-  const [maxYearFilter, setMaxYearFilter] = useState('');
-  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
-  
-  // UI Display toggles
-  const [selectedCoin, setSelectedCoin] = useState(null); // For Detail Modal
-  const [showAddModal, setShowAddModal] = useState(false); // For Add to Collection Form
-  const [coinToAdd, setCoinToAdd] = useState(null);
-  
-  // Image flip state for coin cards
-  const [flippedCoins, setFlippedCoins] = useState({});
-
-  // Persist collection to LocalStorage
-  useEffect(() => {
-    localStorage.setItem('numista_user_collection', JSON.stringify(userCollection));
-  }, [userCollection]);
-
-  // Unique filters options from dataset
-  const issuersList = useMemo(() => {
-    return ['ALL', ...new Set(coins.map(c => c.issuer))];
-  }, [coins]);
-
-  const compositionsList = useMemo(() => {
-    const list = new Set();
-    coins.forEach(c => {
-      if (c.composition.includes('Silver')) list.add('Silver');
-      else if (c.composition.includes('Gold')) list.add('Gold');
-      else if (c.composition.includes('Bimetallic')) list.add('Bimetallic');
-      else list.add('Base Metal');
-    });
-    return ['ALL', ...Array.from(list)];
-  }, [coins]);
-
-  // Filtered Catalog Logic
-  const filteredCoins = useMemo(() => {
-    return coins.filter(coin => {
-      const matchesSearch = coin.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            coin.issuer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            coin.denomination.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesIssuer = selectedIssuer === 'ALL' || coin.issuer === selectedIssuer;
-      
-      let matchesComp = true;
-      if (selectedComposition !== 'ALL') {
-        matchesComp = coin.composition.toLowerCase().includes(selectedComposition.toLowerCase());
-      }
-
-      let matchesMinYr = !minYearFilter || coin.endYear >= parseInt(minYearFilter);
-      let matchesMaxYr = !maxYearFilter || coin.startYear <= parseInt(maxYearFilter);
-
-      return matchesSearch && matchesIssuer && matchesComp && matchesMinYr && matchesMaxYr;
-    });
-  }, [coins, searchQuery, selectedIssuer, selectedComposition, minYearFilter, maxYearFilter]);
-
-  // Flip coin obverse/reverse preview
-  const toggleCoinFlip = (id, e) => {
-    e.stopPropagation();
-    setFlippedCoins(prev => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  // Turn on live camera stream simulation
-  const startCamera = async () => {
-    setCameraActive(true);
-    try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      }
-    } catch (e) {
-      console.log('Webcam not accessible, using interactive photo mode');
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-    }
-    setCameraActive(false);
-  };
-
-  // Trigger Scanner Animation & Identification AI
-  const triggerScanAnalysis = (customImage = null, presetData = null) => {
-    setIsScanning(true);
+  const handleScan = (presetCoin) => {
+    setScanning(true);
     setScanProgress(0);
     setScanResult(null);
 
-    const imgToUse = customImage || presetData?.image || 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=400';
-    if (scanSide === 'obverse') setScannedObverseImg(imgToUse);
-    else setScannedReverseImg(imgToUse);
-
-    // Progress bar animation
-    let current = 0;
     const interval = setInterval(() => {
-      current += 10;
-      setScanProgress(current);
-      if (current >= 100) {
-        clearInterval(interval);
-        setIsScanning(false);
-        
-        // Pick best match (Preset or random candidate from catalog)
-        const matchCoin = presetData 
-          ? coins.find(c => c.id === presetData.coinId) || coins[0]
-          : coins[Math.floor(Math.random() * coins.length)];
-
-        const confidenceScore = presetData ? presetData.confidence : Math.floor(Math.random() * 12) + 87;
-
-        setScanResult({
-          matchedCoin: matchCoin,
-          confidence: confidenceScore,
-          detectedYear: presetData?.detectedYear || matchCoin.startYear,
-          detectedMint: presetData?.detectedMint || (matchCoin.mints ? matchCoin.mints[0] : 'Standard'),
-          featuresDetected: ['Legends / Inscription', 'Die Diameter: ' + matchCoin.diameter + 'mm', 'Composition: ' + matchCoin.composition, 'Bust Profile']
-        });
-
-        showToast("Matched: " + matchCoin.title + " (" + confidenceScore + "% Confidence)");
-      }
+      setScanProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setScanning(false);
+          const matchCoin = presetCoin || coins[Math.floor(Math.random() * coins.length)];
+          const confidenceScore = presetCoin ? 98.4 : 94.2;
+          setScanResult({ coin: matchCoin, confidence: confidenceScore });
+          showToast("Matched: " + matchCoin.title + " (" + confidenceScore + "% Confidence)");
+          return 100;
+        }
+        return prev + 25;
+      });
     }, 180);
   };
 
-  // Handle File Upload for Camera Scanning
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
-        triggerScanAnalysis(uploadEvent.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Add Item to Collection handler
-  const handleAddToCollection = (formData) => {
+  const addToCollection = (coin, grade = 'VF-20', price = '0.00', notes = '') => {
     const newItem = {
-      id: 'col-' + Date.now(),
-      coinId: formData.coinId,
-      year: parseInt(formData.year) || null,
-      mintMark: formData.mintMark || '',
-      grade: formData.grade || 'VF-20',
-      quantity: parseInt(formData.quantity) || 1,
-      purchasePrice: parseFloat(formData.purchasePrice) || 0,
-      estimatedValue: parseFloat(formData.estimatedValue) || 0,
-      notes: formData.notes || '',
-      dateAdded: new Date().toISOString().split('T')[0]
+      instanceId: Date.now(),
+      coinId: coin.id,
+      title: coin.title,
+      issuer: coin.issuer,
+      flag: coin.flag,
+      grade,
+      price: parseFloat(price) || 0,
+      notes,
+      dateAdded: new Date().toLocaleDateString()
     };
-
-    setUserCollection(prev => [newItem, ...prev]);
-    setShowAddModal(false);
-    setCoinToAdd(null);
-    showToast('Coin added to your collection binder!');
+    setCollection([...collection, newItem]);
+    showToast("Added " + coin.title + " to collection");
   };
 
-  // Remove Item from Collection
-  const handleRemoveFromCollection = (collId) => {
-    if (window.confirm("Remove this coin from your collection tracker?")) {
-      setUserCollection(prev => prev.filter(item => item.id !== collId));
-      showToast('Coin removed from binder');
-    }
-  };
-
-  // Calculate Rarity Badge Color
-  const getRarityBadge = (score) => {
-    if (score < 20) return { label: 'Common', bg: 'bg-green-100 text-green-800 border-green-300' };
-    if (score < 50) return { label: 'Scarce', bg: 'bg-blue-100 text-blue-800 border-blue-300' };
-    if (score < 75) return { label: 'Rare', bg: 'bg-purple-100 text-purple-800 border-purple-300' };
-    return { label: 'Extremely Rare', bg: 'bg-amber-100 text-amber-900 border-amber-300 font-bold' };
-  };
-
-  // Total portfolio values
-  const collectionStats = useMemo(() => {
-    const totalCount = userCollection.reduce((acc, item) => acc + item.quantity, 0);
-    const totalSpent = userCollection.reduce((acc, item) => acc + (item.purchasePrice * item.quantity), 0);
-    const totalValue = userCollection.reduce((acc, item) => acc + (item.estimatedValue * item.quantity), 0);
-    
-    // Group by composition count
-    let silverCount = 0;
-    let goldCount = 0;
-    
-    userCollection.forEach(item => {
-      const match = coins.find(c => c.id === item.coinId);
-      if (match) {
-        if (match.composition.includes('Silver')) silverCount += item.quantity;
-        if (match.composition.includes('Gold')) goldCount += item.quantity;
-      }
-    });
-
-    return { totalCount, totalSpent, totalValue, silverCount, goldCount };
-  }, [userCollection, coins]);
+  const filteredCoins = coins.filter(c => 
+    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.issuer.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans pb-20 sm:pb-0">
-      
-      {/* TOAST NOTIFICATION */}
-      {toastMessage && (
-        <div className="fixed top-4 right-4 left-4 sm:left-auto sm:w-80 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-amber-500/40 flex items-center gap-2 animate-bounce">
-          <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
-          <span className="text-xs font-medium">{toastMessage}</span>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+      {/* Top Header */}
+      <header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-40 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <Coins className="w-6 h-6 text-amber-500" />
+          <h1 className="font-bold text-lg tracking-wide text-amber-400">NUMISTA MOBILE</h1>
         </div>
-      )}
-
-      {/* APP TOP BAR */}
-      <header className="sticky top-0 z-30 bg-slate-900 text-white shadow-md">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center font-bold text-slate-900 shadow-inner">
-              <Sparkles className="w-5 h-5 text-slate-950" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg leading-none tracking-wide text-amber-400">NumisMobile</h1>
-              <span className="text-[10px] text-slate-400 font-medium">World Coin Catalog & Collector</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setActiveTab('scan')}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs font-bold rounded-full shadow hover:brightness-110 transition"
-            >
-              <Scan className="w-3.5 h-3.5" />
-              <span>Scan Coin</span>
-            </button>
-
-            <button 
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedIssuer('ALL');
-                setSelectedComposition('ALL');
-                setMinYearFilter('');
-                setMaxYearFilter('');
-              }}
-              className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition"
-              title="Reset Filters"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-            <div className="bg-slate-800 px-3 py-1.5 rounded-full text-xs font-medium border border-slate-700 flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5 text-amber-400" />
-              <span>{userCollection.length} Coins Collected</span>
-            </div>
-          </div>
+        <div className="flex items-center space-x-3 text-sm">
+          <span className="bg-slate-800 px-3 py-1 rounded-full text-slate-300 border border-slate-700">
+            Collection: <strong className="text-white">{collection.length}</strong>
+          </span>
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
-      <main className="max-w-5xl mx-auto w-full flex-1 px-3 py-4 sm:px-6">
-
-        {/* SEARCH & FILTER CONTROLS */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 sm:p-4 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input 
+      {/* Main Content Area */}
+      <main className="flex-1 p-4 max-w-2xl mx-auto w-full pb-24">
+        {/* CATALOG TAB */}
+        {activeTab === 'catalog' && (
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+              <input
                 type="text"
-                placeholder="Search coins by title, issuer, denomination..."
+                placeholder="Search catalog by name, country, or year..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:bg-white transition"
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-amber-500 text-slate-100 placeholder-slate-500"
               />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
             </div>
 
-            <button 
-              onClick={() => setShowFilterDrawer(!showFilterDrawer)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition ${
-                showFilterDrawer || selectedIssuer !== 'ALL' || selectedComposition !== 'ALL' || minYearFilter || maxYearFilter
-                  ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm' 
-                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              <Filter className="w-4 h-4" />
-              <span className="hidden sm:inline">Filters</span>
-            </button>
+            <div className="grid grid-cols-1 gap-3">
+              {filteredCoins.map((coin) => (
+                <div key={coin.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                  <div className="flex items-center space-x-3">
+                    <img src={coin.obverseImg} alt={coin.title} className="w-12 h-12 rounded-full object-cover border border-amber-500/30" />
+                    <div>
+                      <h3 className="font-semibold text-slate-100 text-sm">{coin.title}</h3>
+                      <p className="text-xs text-slate-400">{coin.flag} {coin.issuer} • {coin.years}</p>
+                      <span className="inline-block mt-1 text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">
+                        Rarity: {coin.rarity}/100
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <button onClick={() => setSelectedCoin(coin)} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">
+                      Details
+                    </button>
+                    <button onClick={() => addToCollection(coin)} className="p-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs">
+                      + Add
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+        )}
 
-          {/* EXTENDED FILTER DRAWER */}
-          {showFilterDrawer && (
-            <div className="mt-3 pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-3 animate-fadeIn">
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Issuer / Country</label>
-                <select 
-                  value={selectedIssuer}
-                  onChange={(e) => setSelectedIssuer(e.target.value)}
-                  className="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                >
-                  {issuersList.map(iss => (
-                    <option key={iss} value={iss}>{iss === 'ALL' ? 'All Issuers' : iss}</option>
-                  ))}
-                </select>
+        {/* SCANNER TAB */}
+        {activeTab === 'scan' && (
+          <div className="space-y-6">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center">
+              <h2 className="text-lg font-bold text-slate-100 mb-1">AI Coin Recognition</h2>
+              <p className="text-xs text-slate-400 mb-4">Snap or select a preset coin to scan features against Numista DB</p>
+              
+              <div className="relative w-48 h-48 mx-auto border-2 border-dashed border-amber-500/50 rounded-full flex items-center justify-center bg-slate-950 overflow-hidden mb-4">
+                {scanning ? (
+                  <div className="flex flex-col items-center">
+                    <RefreshCw className="w-8 h-8 text-amber-400 animate-spin mb-2" />
+                    <span className="text-xs font-semibold text-amber-400">Scanning {scanProgress}%</span>
+                  </div>
+                ) : scanResult ? (
+                  <img src={scanResult.coin.obverseImg} alt="Scanned" className="w-full h-full object-cover" />
+                ) : (
+                  <Camera className="w-12 h-12 text-slate-600" />
+                )}
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Metal Composition</label>
-                <select 
-                  value={selectedComposition}
-                  onChange={(e) => setSelectedComposition(e.target.value)}
-                  className="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                >
-                  {compositionsList.map(comp => (
-                    <option key={comp} value={comp}>{comp === 'ALL' ? 'All Metals' : comp}</option>
-                  ))}
-                </select>
+              <div className="flex justify-center space-x-2 mb-4">
+                <button onClick={() => handleScan()} disabled={scanning} className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Scan Live Camera</span>
+                </button>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Date Range (Years)</label>
-                <div className="flex items-center gap-2">
-                  <input 
-                    type="number" 
-                    placeholder="From"
-                    value={minYearFilter}
-                    onChange={(e) => setMinYearFilter(e.target.value)}
-                    className="w-1/2 p-2 text-xs bg-slate-50 border border-slate-200 rounded-md"
-                  />
-         
+              <div className="border-t border-slate-800 pt-4">
+                <p
