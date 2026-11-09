@@ -282,7 +282,7 @@ export default function App() {
           featuresDetected: ['Legends / Inscription', 'Die Diameter: ' + matchCoin.diameter + 'mm', 'Composition: ' + matchCoin.composition, 'Bust Profile']
         });
 
-        showToast(`Matched: ${matchCoin.title} (${confidenceScore}% Confidence)`);
+        showToast("Matched: " + matchCoin.title + " (" + confidenceScore + "% Confidence)");
       }
     }, 180);
   };
