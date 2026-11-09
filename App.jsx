@@ -219,4 +219,113 @@ export default function App() {
               </div>
 
               <div className="border-t border-slate-800 pt-4">
-                <p
+                <p className="text-xs text-slate-400 mb-2">Test scanner with presets:</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {coins.map((c) => (
+                    <button key={c.id} onClick={() => handleScan(c)} className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700">
+                      {c.flag} {c.title.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {scanResult && (
+              <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
+                    {scanResult.confidence}% Match
+                  </span>
+                  <h4 className="font-semibold text-slate-100 text-sm mt-1">{scanResult.coin.title}</h4>
+                  <p className="text-xs text-slate-400">{scanResult.coin.issuer}</p>
+                </div>
+                <button onClick={() => addToCollection(scanResult.coin)} className="bg-emerald-500 text-slate-950 font-bold px-3 py-2 rounded-lg text-xs">
+                  Add to Binder
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* COLLECTION TAB */}
+        {activeTab === 'collection' && (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold text-slate-100">My Collection Binder</h2>
+            {collection.length === 0 ? (
+              <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+                <Coins className="w-12 h-12 mx-auto text-slate-600 mb-2" />
+                <p>Your binder is empty. Add coins from the Catalog or Scanner!</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {collection.map((item) => (
+                  <div key={item.instanceId} className="bg-slate-900 border border-slate-800 rounded-xl p-3 flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-100">{item.flag} {item.title}</h4>
+                      <p className="text-xs text-slate-400">Grade: <span className="text-amber-400">{item.grade}</span> • Added {item.dateAdded}</p>
+                    </div>
+                    <button 
+                      onClick={() => setCollection(collection.filter(i => i.instanceId !== item.instanceId))}
+                      className="text-rose-400 hover:text-rose-300 p-2 text-xs"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* Details Modal */}
+      {selectedCoin && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-slate-100">{selectedCoin.title}</h3>
+              <button onClick={() => setSelectedCoin(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-slate-950 p-2 rounded-lg"><span className="text-slate-400">Issuer:</span> {selectedCoin.issuer}</div>
+              <div className="bg-slate-950 p-2 rounded-lg"><span className="text-slate-400">Years:</span> {selectedCoin.years}</div>
+              <div className="bg-slate-950 p-2 rounded-lg"><span className="text-slate-400">Weight:</span> {selectedCoin.weight}</div>
+              <div className="bg-slate-950 p-2 rounded-lg"><span className="text-slate-400">Diameter:</span> {selectedCoin.diameter}</div>
+            </div>
+            <p className="text-xs text-slate-300 bg-slate-950 p-3 rounded-lg leading-relaxed">{selectedCoin.description}</p>
+            <button onClick={() => { addToCollection(selectedCoin); setSelectedCoin(null); }} className="w-full bg-amber-500 text-slate-950 font-bold py-2.5 rounded-xl text-sm">
+              Add to Collection
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Notification Toast */}
+      {toastMessage && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 px-4 py-2 rounded-full font-bold text-xs shadow-lg z-50 animate-bounce">
+          {toastMessage}
+        </div>
+      )}
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 p-2 z-40">
+        <div className="max-w-md mx-auto flex justify-around">
+          <button onClick={() => setActiveTab('catalog')} className={`flex flex-col items-center p-2 rounded-xl text-xs font-medium ${activeTab === 'catalog' ? 'text-amber-400' : 'text-slate-400'}`}>
+            <Search className="w-5 h-5 mb-1" />
+            Catalog
+          </button>
+          <button onClick={() => setActiveTab('scan')} className={`flex flex-col items-center p-2 rounded-xl text-xs font-medium ${activeTab === 'scan' ? 'text-amber-400' : 'text-slate-400'}`}>
+            <Camera className="w-5 h-5 mb-1" />
+            Scan Coin
+          </button>
+          <button onClick={() => setActiveTab('collection')} className={`flex flex-col items-center p-2 rounded-xl text-xs font-medium ${activeTab === 'collection' ? 'text-amber-400' : 'text-slate-400'}`}>
+            <Layers className="w-5 h-5 mb-1" />
+            Binder
+          </button>
+        </div>
+      </nav>
+    </div>
+  );
+}
